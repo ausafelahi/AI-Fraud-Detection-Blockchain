@@ -1,0 +1,18 @@
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/*.pkl
+backend/creditcard.csv
+
+# Blockchain
+blockchain/node_modules/
+blockchain/.env
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+
+# General
+.DS_Store
+*.log
