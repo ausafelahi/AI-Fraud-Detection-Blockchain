@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
           <Sidebar />
           <div className="flex-1 min-h-screen overflow-auto">{children}</div>
         </div>
+        <Analytics />
       </body>
     </html>
   );

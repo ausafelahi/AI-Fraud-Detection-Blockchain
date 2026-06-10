@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { logFraudOnChain } from "@/lib/contract";
+import { supabase } from "@/lib/supabase";
 
 interface Agent {
   id: string;
@@ -104,7 +105,18 @@ export default function AIWorkflows() {
               : template.verdict === "SUSPICIOUS"
                 ? Math.floor(Math.random() * 20 + 45)
                 : Math.floor(Math.random() * 20 + 5);
-          await logFraudOnChain(txId, template.verdict, risk);
+
+          const hash = await logFraudOnChain(txId, template.verdict, risk);
+
+          await supabase.from("fraud_records").insert({
+            transaction_id: txId,
+            verdict: template.verdict,
+            risk_score: risk,
+            probability: risk / 100,
+            chain: "ETH",
+            reported_by: hash,
+          });
+
           setAgents((prev) =>
             prev.map((a) =>
               a.id === id
@@ -114,6 +126,7 @@ export default function AIWorkflows() {
                       ...a.log,
                       template.workflow[i],
                       `On-chain record created: ${txId} → ${template.verdict}`,
+                      `Saved to database.`,
                     ],
                   }
                 : a,
